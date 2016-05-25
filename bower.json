@@ -1,0 +1,16 @@
+{
+  "name": "fs-angular-build",
+  "description": "",
+  "main": [
+    "dist/build.js"
+  ],
+  "authors": [
+    "Firestitch Inc."
+  ],
+  "license": "MIT",
+  "ignore": [
+    "src",
+    ".gitignore"
+  ],
+  "private": false
+}

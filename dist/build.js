@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('fs-angular-build',[])
-    .service('fsBuild', function ($http, $timeout, fsModal) {
+    .service('fsBuild', function ($http, $timeout, fsModal, $location) {
         
         var build_date = null;
         var service = {

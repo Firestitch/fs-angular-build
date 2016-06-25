@@ -13,6 +13,10 @@
 
         function listen(interval) {
 
+            if($location.$$host=='localhost') {
+                return;
+            }
+
             var interval = interval || 60;
 
             $http.get("build.json")

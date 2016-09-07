@@ -3,7 +3,7 @@
 
     angular.module('fs-angular-build',[])
     .service('fsBuild', function ($http, $timeout, fsModal, $location) {
-        
+
         var build_date = null;
         var service = {
             listen: listen
@@ -28,7 +28,8 @@
 
                     if(build_date!==null) {
                         if(build_date<latest_build_date) {
-                            fsModal.confirm({ content: 'There is a new version of this app available. Refresh now?',
+                            fsModal.confirm({   focusOnOpen: false,
+                                                content: 'There is a new version of this app available. Refresh now?',
                                                 ok: function() {
                                                     location.reload(true);
                                                 }});

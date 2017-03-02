@@ -2,12 +2,15 @@
     'use strict';
 
     angular.module('fs-angular-build',[])
-    .service('fsBuild', function ($http, $timeout, fsModal, $location) {
+    .service('fsBuild', function ($http, $interval, fsModal, $location, $rootScope) {
 
-        var build_date = null;
         var service = {
             listen: listen
-        };
+        },
+        self = this;
+
+        self.build = {};
+        self.newer = false;
 
         return service;
 
@@ -17,35 +20,51 @@
                 return;
             }
 
-            var interval = interval || 60;
+            $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
 
-            $http.get("build.json")
-            .then(function(build) {
-                if(build.data && build.data.build_date) {
-                    var latest_build_date = new Date(build.data.build_date);
-
-                    console.log('Latest Build Date: ' + latest_build_date);
-
-                    if(build_date!==null) {
-                        if(build_date<latest_build_date) {
-                            fsModal.confirm({   focusOnOpen: false,
-                                                content: 'There is a new version of this app available. Refresh now?',
-                                                ok: function() {
-                                                    location.reload(true);
-                                                }});
-                        }
-                    }
-
-                    build_date = latest_build_date;
-                }
-            })
-            .catch(function(e) {
-
+            	if(self.build.update_priority=='passive' && !toState.onEnter) {
+            		if(self.newer) {
+            			location.reload(true);
+            		}
+           		}
             });
 
-            $timeout(function() {
-                listen();
-            },interval * 1000)
+            var interval = interval || 30;
+            $interval(check,interval * 1000)
+        }
+
+        function check() {
+            $http.get("build.json")
+            .then(function(response) {
+            	var build = response && response.data ? response.data : {};
+
+                if(build.build_date) {
+                    build.build_date = new Date(build.build_date);
+
+                    if(self.build.build_date && build.build_date>self.build.build_date) {
+                    	self.newer = true;
+
+                    	if(self.build!=build) {
+	                    	console.log('Latest Build Date: ' + build.build_date);
+	                    }
+
+	                    if(build.update_priority=='confirm') {
+	                    	if(newer_version()) {
+		                        fsModal.confirm({   focusOnOpen: false,
+		                                            content: 'There is a new version of this app available. Refresh now?',
+		                                            ok: function() {
+		                                                location.reload(true);
+		                                            }});
+		                 	}
+	                    } else if(build.update_priority=='immediate') {
+	                    	location.reload(true);
+	                    }
+	                }
+
+	                self.build = build;
+                }
+            })
+            .catch(function(e) {});
         }
     });
 })();

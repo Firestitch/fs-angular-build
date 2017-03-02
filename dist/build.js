@@ -28,9 +28,11 @@
             		}
            		}
             });
+		
+            check();
 
             var interval = interval || 30;
-            $interval(check,interval * 1000)
+            $interval(check,interval * 1000);
         }
 
         function check() {

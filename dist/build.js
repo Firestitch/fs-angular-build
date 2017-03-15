@@ -28,7 +28,7 @@
             		}
            		}
             });
-		
+
             check();
 
             var interval = interval || 30;
@@ -51,13 +51,11 @@
 	                    }
 
 	                    if(build.update_priority=='confirm') {
-	                    	if(newer_version()) {
-		                        fsModal.confirm({   focusOnOpen: false,
-		                                            content: 'There is a new version of this app available. Refresh now?',
-		                                            ok: function() {
-		                                                location.reload(true);
-		                                            }});
-		                 	}
+	                        fsModal.confirm({   focusOnOpen: false,
+	                                            content: 'There is a new version of this app available. Refresh now?',
+	                                            ok: function() {
+	                                                location.reload(true);
+	                                            }});
 	                    } else if(build.update_priority=='immediate') {
 	                    	location.reload(true);
 	                    }
